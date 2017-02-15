@@ -26,7 +26,6 @@ type alias Model =
 
 type Msg
     = Select Int Int
-    | NoOp
 
 
 emptyGrid : Grid
@@ -69,6 +68,7 @@ viewSquare row col square =
             text_
                 [ x (toString <| row * 100 + 50)
                 , y (toString <| col * 100 + 50)
+                , fontSize "35"
                 ]
                 [ text "X" ]
 
@@ -76,6 +76,7 @@ viewSquare row col square =
             text_
                 [ x (toString <| row * 100 + 50)
                 , y (toString <| col * 100 + 50)
+                , fontSize "35"
                 ]
                 [ text "O" ]
 
@@ -107,7 +108,7 @@ viewLine x1_ y1_ x2_ y2_ =
         , y1 (toString y1_)
         , x2 (toString x2_)
         , y2 (toString y2_)
-        , strokeWidth "5"
+        , strokeWidth "10"
         , stroke "black"
         ]
         []
@@ -132,9 +133,6 @@ update msg model =
 
                     Nothing ->
                         model
-
-        NoOp ->
-            model
 
 
 main =
