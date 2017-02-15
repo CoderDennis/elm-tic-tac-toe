@@ -18,9 +18,14 @@ type alias Grid =
     List Square
 
 
+type Player
+    = One
+    | Two
+
+
 type alias Model =
     { grid : Grid
-    , player : Square
+    , player : Player
     }
 
 
@@ -36,14 +41,18 @@ emptyGrid =
 initialModel : Model
 initialModel =
     { grid = emptyGrid
-    , player = X
+    , player = One
     }
 
 
 view : Model -> Html Msg
 view model =
     svg
-        [ width "300", height "300", viewBox "0 0 300 300" ]
+        [ viewBox "0 0 300 300"
+        , preserveAspectRatio "xMidYMid meet"
+        , height "100%"
+        , width "100%"
+        ]
         [ viewLines
         , viewGrid model.grid
         ]
@@ -140,13 +149,24 @@ update msg model =
             let
                 nextPlayer =
                     case model.player of
-                        X ->
+                        One ->
+                            Two
+
+                        Two ->
+                            One
+
+                square =
+                    case model.player of
+                        One ->
+                            X
+
+                        Two ->
                             O
 
-                        _ ->
-                            X
+                newGrid =
+                    setAt (row * 3 + col) square model.grid
             in
-                case setAt (row * 3 + col) model.player model.grid of
+                case newGrid of
                     Just g ->
                         { model | grid = g, player = nextPlayer }
 
