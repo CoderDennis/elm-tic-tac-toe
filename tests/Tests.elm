@@ -28,5 +28,19 @@ all =
                         , Empty
                         ]
                         |> Expect.equal (Won PlayerX)
+            , test "PlayerO won on 2nd column" <|
+                \() ->
+                    gameState
+                        [ Empty
+                        , O
+                        , X
+                        , X
+                        , O
+                        , Empty
+                        , X
+                        , O
+                        , Empty
+                        ]
+                        |> Expect.equal (Won PlayerO)
             ]
         ]

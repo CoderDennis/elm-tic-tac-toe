@@ -32,6 +32,7 @@ type alias Model =
 
 type Msg
     = Select Int Int
+    | Reset
 
 
 type GameState
@@ -53,7 +54,38 @@ initialModel =
 
 gameState : Grid -> GameState
 gameState grid =
-    InProgress
+    let
+        rows =
+            grid |> groupsOf 3
+
+        rowWinners =
+            rows
+                |> filterMap threeInRow
+
+        colWinners =
+            rows
+                |> transpose
+                |> filterMap threeInRow
+    in
+        case rowWinners ++ colWinners of
+            [ p ] ->
+                Won p
+
+            _ ->
+                InProgress
+
+
+threeInRow : List Square -> Maybe Player
+threeInRow row =
+    case row of
+        [ X, X, X ] ->
+            Just PlayerX
+
+        [ O, O, O ] ->
+            Just PlayerO
+
+        _ ->
+            Nothing
 
 
 view : Model -> Html Msg
@@ -64,7 +96,14 @@ view model =
         , height "100%"
         , width "100%"
         ]
-        [ g [ transform "translate(0,50)" ]
+        [ text_
+            [ x "20"
+            , y "30"
+            , onClick Reset
+            , fontSize "35"
+            ]
+            [ text "Reset" ]
+        , g [ transform "translate(0,50)" ]
             [ viewLines
             , viewGrid model.grid
             ]
@@ -163,6 +202,9 @@ viewLine x1_ y1_ x2_ y2_ =
 update : Msg -> Model -> Model
 update msg model =
     case msg of
+        Reset ->
+            initialModel
+
         Select row col ->
             let
                 nextPlayer =
