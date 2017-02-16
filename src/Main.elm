@@ -48,13 +48,15 @@ initialModel =
 view : Model -> Html Msg
 view model =
     svg
-        [ viewBox "0 0 300 300"
+        [ viewBox "0 0 300 400"
         , preserveAspectRatio "xMidYMid meet"
         , height "100%"
         , width "100%"
         ]
-        [ viewLines
-        , viewGrid model.grid
+        [ g [ transform "translate(0,50)" ]
+            [ viewLines
+            , viewGrid model.grid
+            ]
         ]
 
 
@@ -74,13 +76,18 @@ viewRow r row =
         |> List.indexedMap (viewSquare r)
 
 
+xoWidth : String
+xoWidth =
+    "13"
+
+
 viewSquare : Int -> Int -> Square -> Svg Msg
 viewSquare row col square =
     case square of
         X ->
             g
                 [ strokeLinecap "round"
-                , strokeWidth "12"
+                , strokeWidth xoWidth
                 , stroke "black"
                 ]
                 [ viewLine
@@ -100,7 +107,7 @@ viewSquare row col square =
                 [ cx (toString <| row * 100 + 50)
                 , cy (toString <| col * 100 + 50)
                 , r "30"
-                , strokeWidth "12"
+                , strokeWidth xoWidth
                 , stroke "black"
                 , fillOpacity "0"
                 ]
