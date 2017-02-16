@@ -1,4 +1,4 @@
-module Main exposing (..)
+module Game exposing (..)
 
 import Html exposing (Html)
 import Svg exposing (..)
@@ -19,8 +19,9 @@ type alias Grid =
 
 
 type Player
-    = One
-    | Two
+    = PlayerX
+    | PlayerO
+    | Cat
 
 
 type alias Model =
@@ -33,6 +34,11 @@ type Msg
     = Select Int Int
 
 
+type GameState
+    = InProgress
+    | Won Player
+
+
 emptyGrid : Grid
 emptyGrid =
     repeat 9 Empty
@@ -41,8 +47,13 @@ emptyGrid =
 initialModel : Model
 initialModel =
     { grid = emptyGrid
-    , player = One
+    , player = PlayerX
     }
+
+
+gameState : Grid -> GameState
+gameState grid =
+    InProgress
 
 
 view : Model -> Html Msg
@@ -156,18 +167,18 @@ update msg model =
             let
                 nextPlayer =
                     case model.player of
-                        One ->
-                            Two
+                        PlayerX ->
+                            PlayerO
 
-                        Two ->
-                            One
+                        _ ->
+                            PlayerX
 
                 square =
                     case model.player of
-                        One ->
+                        PlayerX ->
                             X
 
-                        Two ->
+                        _ ->
                             O
 
                 newGrid =
